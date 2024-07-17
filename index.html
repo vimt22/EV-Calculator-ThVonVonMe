@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: #ecf0f1;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .calculator:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            background-color: #e8f6ff;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .eco-info {
+            background-color: #d5f5e3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .eco-info h3 {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-car-battery"></i> EV Calculator</h1>
+        
+        <div class="calculator">
+            <h2><i class="fas fa-coins"></i> 1. Cost Calculator</h2>
+            <input type="number" id="distance" placeholder="Distance (km)">
+            <input type="number" id="electricityRate" placeholder="Electricity rate per unit (USD)">
+            <input type="number" id="batteryCapacity" placeholder="Battery capacity (kWh)">
+            <input type="number" id="evMileage" placeholder="Energy consumption rate (km/charge)">
+            <button onclick="calculateCost()">Calculate</button>
+        </div>
+
+        <div class="calculator">
+            <h2><i class="fas fa-tachometer-alt"></i> 2. Mileage Calculator</h2>
+            <input type="number" id="batteryCapacity2" placeholder="Battery capacity (Ah/kWh)">
+            <input type="number" id="motorCurrent" placeholder="Motor current (A)">
+            <input type="number" id="vehicleSpeed" placeholder="Vehicle speed (km/h)">
+            <button onclick="calculateMileage()">Calculate</button>
+        </div>
+
+        <div class="calculator">
+            <h2><i class="fas fa-bolt"></i> 3. Power Calculator</h2>
+            <input type="number" id="grossWeight" placeholder="Gross weight (kg)">
+            <input type="number" id="desiredSpeed" placeholder="Desired speed (km/h)">
+            <input type="number" id="accelerationTime" placeholder="Acceleration time (s)">
+            <button onclick="calculatePower()">Calculate</button>
+        </div>
+
+        <div class="calculator">
+            <h2><i class="fas fa-clock"></i> 4. Remaining Time Calculator</h2>
+            <input type="number" id="totalCapacity" placeholder="Total battery capacity (kWh)">
+            <input type="number" id="currentLevel" placeholder="Current battery level (%)">
+            <input type="number" id="targetLevel" placeholder="Target battery level (%)">
+            <input type="number" id="chargingPower" placeholder="Charging power (kW)">
+            <button onclick="calculateRemainingTime()">Calculate</button>
+        </div>
+
+        <div class="calculator">
+            <h2><i class="fas fa-road"></i> 5. Estimated Distance Calculator</h2>
+            <input type="number" id="currentBatteryLevel" placeholder="Current battery level (%)">
+            <input type="number" id="evRange" placeholder="Full charge range (km)">
+            <button onclick="calculateEstimatedDistance()">Calculate</button>
+        </div>
+
+        <div class="calculator">
+            <h2><i class="fas fa-gas-pump"></i> 6. EV vs Fuel Vehicle Comparison</h2>
+            <input type="number" id="evCostPerKm" placeholder="EV cost per km (USD)">
+            <input type="number" id="fuelCostPerKm" placeholder="Fuel vehicle cost per km (USD)">
+            <input type="number" id="comparisonDistance" placeholder="Comparison distance (km)">
+            <button onclick="compareEVandFuel()">Compare</button>
+        </div>
+
+        <div id="result"></div>
+
+        <div class="eco-info">
+            <h3>Benefits of Electric Vehicles to the Environment</h3>
+            <ul>
+                <li>Reduces greenhouse gas emissions</li>
+                <li>Reduces urban air pollution</li>
+                <li>Decreases dependence on fossil fuels</li>
+                <li>Supports the use of renewable energy</li>
+                <li>Reduces noise pollution</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function calculateCost() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            const electricityRate = parseFloat(document.getElementById('electricityRate').value);
+            const batteryCapacity = parseFloat(document.getElementById('batteryCapacity').value);
+            const evMileage = parseFloat(document.getElementById('evMileage').value);
+
+            const energyUsed = (distance / evMileage) * batteryCapacity;
+            const cost = energyUsed * electricityRate;
+
+            document.getElementById('result').innerHTML = `Estimated cost: $${cost.toFixed(2)}`;
+        }
+
+        function calculateMileage() {
+            const batteryCapacity = parseFloat(document.getElementById('batteryCapacity2').value);
+            const motorCurrent = parseFloat(document.getElementById('motorCurrent').value);
+            const vehicleSpeed = parseFloat(document.getElementById('vehicleSpeed').value);
+
+            const mileage = (batteryCapacity / motorCurrent) * vehicleSpeed;
+
+            document.getElementById('result').innerHTML = `Estimated energy consumption rate: ${mileage.toFixed(2)} km/charge`;
+        }
+
+        function calculatePower() {
+            const grossWeight = parseFloat(document.getElementById('grossWeight').value);
+            const desiredSpeed = parseFloat(document.getElementById('desiredSpeed').value);
+            const accelerationTime = parseFloat(document.getElementById('accelerationTime').value);
+
+            const power = (0.5 * grossWeight * Math.pow(desiredSpeed / 3.6, 2)) / accelerationTime;
+
+            document.getElementById('result').innerHTML = `Estimated required power: ${power.toFixed(2)} watts`;
+        }
+
+        function calculateRemainingTime() {
+            const totalCapacity = parseFloat(document.getElementById('totalCapacity').value);
+            const currentLevel = parseFloat(document.getElementById('currentLevel').value);
+            const targetLevel = parseFloat(document.getElementById('targetLevel').value);
+            const chargingPower = parseFloat(document.getElementById('chargingPower').value);
+
+            const remainingCapacity = totalCapacity * ((targetLevel - currentLevel) / 100);
+            const remainingTime = remainingCapacity / chargingPower;
+
+            document.getElementById('result').innerHTML = `Estimated remaining time: ${remainingTime.toFixed(2)} hours`;
+        }
+
+        function calculateEstimatedDistance() {
+            const currentBatteryLevel = parseFloat(document.getElementById('currentBatteryLevel').value);
+            const evRange = parseFloat(document.getElementById('evRange').value);
+
+            const estimatedDistance = (currentBatteryLevel / 100) * evRange;
+
+            document.getElementById('result').innerHTML = `Estimated travel distance: ${estimatedDistance.toFixed(2)} km`;
+        }
+
+        function compareEVandFuel() {
+            const evCostPerKm = parseFloat(document.getElementById('evCostPerKm').value);
+            const fuelCostPerKm = parseFloat(document.getElementById('fuelCostPerKm').value);
+            const comparisonDistance = parseFloat(document.getElementById('comparisonDistance').value);
+
+            const evCost = evCostPerKm * comparisonDistance;
+            const fuelCost = fuelCostPerKm * comparisonDistance;
+
+            document.getElementById('result').innerHTML = `EV cost: $${evCost.toFixed(2)}<br>Fuel vehicle cost: $${fuelCost.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
